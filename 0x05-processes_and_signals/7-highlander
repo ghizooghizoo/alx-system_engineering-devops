@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 # Highlander
-
-while true
-do
-	echo "To infinity and beyond"
+while true; do
+	echo "infinity and beyond indefinitely"
 	sleep 2
-	trap 'echo "I am invincible!!!"' SIGTERM
-done
+	trap "echo I am invincible!!!" SIGTERM
+done 

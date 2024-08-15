@@ -1,18 +1,28 @@
 #!/usr/bin/python3
-"""Exports to-do list information of Allll employees to JSON format"""
+""" Dictionary of list of diectionaries """
 import json
 import requests
+from sys import argv
+
+
+def list_dictionaries():
+    """ List of tasks for all employees """
+    api_url = 'https://jsonplaceholder.typicode.com/'
+    users_url = f'{api_url}/users/'
+
+    users_list = requests.get(users_url).json()
+
+    with open(f'todo_all_employees.json', mode='w', encoding='utf-8') as file:
+        json.dump({user.get('id'): [
+            {
+                'username': user.get('username'),
+                'task': task.get('title'),
+                'completed': task.get('completed')
+            }
+            for task in requests.get('{}/{}/todos/'
+                                     .format(users_url, user.get('id'))).json()
+        ] for user in users_list}, file)
+
 
 if __name__ == "__main__":
-    baseUrl = "https://jsonplaceholder.typicode.com/"
-    users = requests.get(baseUrl + "users").json()
-
-    with open("todo_all_employees.json", "w") as f:
-        json.dump({
-            user.get("id"): [{
-                "task": task.get("title"),
-                "completed": task.get("completed"),
-                "username": user.get("username")
-            } for task in requests.get(
-                baseUrl + "todos", params={"userId": user.get("id")}).json()]
-            for user in users}, f)
+    list_dictionaries()

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# ls using for loop
-
-for file in *; do
-  echo "$file" | cut -d '-' -f 2;
+# Bash script that displays content of current directory.
+cmd_ls=$(ls)
+for file in $cmd_ls; do
+	echo "$file" | cut -d '-' -f2
 done

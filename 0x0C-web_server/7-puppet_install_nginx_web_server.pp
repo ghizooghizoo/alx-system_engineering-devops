@@ -1,20 +1,32 @@
-# Install Nginx web server (w/ Puppet)
+# Install Nginx package
 package { 'nginx':
-  ensure => installed,
+  ensure => 'installed',
 }
 
-file_line { 'aaaaa':
-  ensure => 'present',
-  path   => '/etc/nginx/sites-available/default',
-  after  => 'listen 80 default_server;',
-  line   => 'rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;',
+# Configure Nginx
+file { '/etc/nginx/sites-available/default':
+  ensure  => file,
+  content => "
+    server {
+      listen 80;
+      server_name _;
+
+      location / {
+        return 200 'Hello World!';
+      }
+
+      location /redirect_me {
+        return 301 /;
+      }
+    }
+  ",
+  notify => Service['nginx'],
 }
 
-file { '/var/www/html/index.html':
-  content => 'Hello World!',
-}
-
+# Enable Nginx service and start it
 service { 'nginx':
-  ensure  => running,
-  require => Package['nginx'],
+  ensure     => 'running',
+  enable     => true,
+  hasstatus  => true,
+  hasrestart => true,
 }

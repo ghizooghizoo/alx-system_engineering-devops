@@ -1,1 +1,1 @@
-HTTPS SSL
+https ssl
